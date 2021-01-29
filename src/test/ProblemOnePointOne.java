@@ -63,7 +63,12 @@ public class ProblemOnePointOne {
 		}
 	}
 	
-	public void walking(int currentRow, int currentCol) {
+	public void process(int startRow, int startCol) {
+		this.walking(startRow -1, startCol -1);
+		this.printOutput();
+	}
+
+	private void walking(int currentRow, int currentCol) {
 		int row = currentRow;
 		if(currentRow == 5 && currentCol == 7) {
 			return;
@@ -89,7 +94,7 @@ public class ProblemOnePointOne {
 		
 	}
 
-	public void printOutput() {
+	private void printOutput() {
 		System.out.println("Output");
 		System.out.println(this.output.substring(0, this.output.lastIndexOf(",")));
 		System.out.println("Finished problem 1.1");
