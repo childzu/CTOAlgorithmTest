@@ -6,13 +6,13 @@ import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
-public class ProblemOnePointOne {
+public class ProblemOnePointTwo {
 	
 	private int inputs[][];
 	private String output;
-	private String inputFileName= "input1-1.txt";
+	private String inputFileName= "input1-2.txt";
 	
-	public ProblemOnePointOne() {
+	public ProblemOnePointTwo() {
 		this.inputs = new int[6][7];
 		this.output = "";
 		this.readInputFile();
@@ -61,39 +61,6 @@ public class ProblemOnePointOne {
 			}
 			System.out.println();
 		}
-	}
-	
-	public void walking(int currentRow, int currentCol) {
-		int row = currentRow;
-		if(currentRow == 5 && currentCol == 7) {
-			return;
-		}
-		if(currentCol%2 == 0) {
-			while(row < 6) {
-				//System.out.print(this.inputs[row][currentCol] + " ");
-				this.output += this.inputs[row][currentCol] + ",";
-				row++;
-			}
-			currentCol++;
-			walking(row-1, currentCol);
-		}
-		else {
-			while(row >= 0) {
-				//System.out.print(this.inputs[row][currentCol] + " ");
-				this.output += this.inputs[row][currentCol] + ",";
-				row--;
-			}
-			currentCol++;
-			walking(row+1, currentCol);
-		}
-		
-	}
-
-	public void printOutput() {
-		System.out.println("Output");
-		System.out.println(this.output.substring(0, this.output.lastIndexOf(",")));
-		System.out.println("Finished problem 1.1");
-		System.out.println("====================");
 	}
 
 }
