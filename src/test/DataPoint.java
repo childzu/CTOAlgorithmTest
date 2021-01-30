@@ -1,6 +1,6 @@
 package test;
 
-public class DataOnePointTwo {
+public class DataPoint {
 	
 	private int number;
 	private boolean isWalking;
@@ -18,6 +18,4 @@ public class DataOnePointTwo {
 		this.isWalking = isWalking;
 	}
 	
-	
-
 }
