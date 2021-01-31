@@ -1,4 +1,4 @@
-package test;
+package problem.one;
 
 import java.util.ArrayList;
 
@@ -27,113 +27,66 @@ public class ProblemOnePointThree {
 			for(int col=0; col < MAX_COL; col++) {
 				if(this.inputs[row][col].getNumber() == startNumber) {
 					Route route1, route2;
-					ArrayList<DataPoint> shortList, longList;
 					
 					route1 = new Route();
 					route1.setDirection(Direction.EAST);
-					shortList = this.findRoute(Direction.EAST, startNumber, findingNumber, row, col, true);
-					route1.setRoutePoint(shortList);
-
+					route1.setRoutePoint(this.findRoute(Direction.EAST, startNumber, findingNumber, row, col, true));
 					route2 = new Route();
 					route2.setDirection(Direction.EAST);
-					longList = this.findRoute(Direction.EAST, startNumber, findingNumber, row, col, false);
-					route2.setRoutePoint(longList);
-					
-					if(this.checkShortestRoutesEqualLongestRoutes(shortList, longList)) {
-						this.output.add(route1);
-					}
-					else {
-						this.output.add(route1);
-						this.output.add(route2);
-					}
+					route2.setRoutePoint(this.findRoute(Direction.EAST, startNumber, findingNumber, row, col, false));
+					this.addRoutesToOutput(route1, route2);
 					
 					route1 = new Route();
 					route1.setDirection(Direction.SOUTH);
-					shortList = this.findRoute(Direction.SOUTH, startNumber, findingNumber, row, col, true);
-					route1.setRoutePoint(shortList);
-
+					route1.setRoutePoint(this.findRoute(Direction.SOUTH, startNumber, findingNumber, row, col, true));
 					route2 = new Route();
 					route2.setDirection(Direction.SOUTH);
-					longList = this.findRoute(Direction.SOUTH, startNumber, findingNumber, row, col, false);
-					route2.setRoutePoint(longList);
-
-					if(this.checkShortestRoutesEqualLongestRoutes(shortList, longList)) {
-						this.output.add(route1);
-					}
-					else {
-						this.output.add(route1);
-						this.output.add(route2);
-					}
+					route2.setRoutePoint(this.findRoute(Direction.SOUTH, startNumber, findingNumber, row, col, false));
+					this.addRoutesToOutput(route1, route2);
 					
 					route1 = new Route();
 					route1.setDirection(Direction.WEST);
-					shortList = this.findRoute(Direction.WEST, startNumber, findingNumber, row, col, true);
-					route1.setRoutePoint(shortList);
-
+					route1.setRoutePoint(this.findRoute(Direction.WEST, startNumber, findingNumber, row, col, true));
 					route2 = new Route();
 					route2.setDirection(Direction.WEST);
-					longList = this.findRoute(Direction.WEST, startNumber, findingNumber, row, col, false);
-					route2.setRoutePoint(longList);
-
-					if(this.checkShortestRoutesEqualLongestRoutes(shortList, longList)) {
-						this.output.add(route1);
-					}
-					else {
-						this.output.add(route1);
-						this.output.add(route2);
-					}
+					route2.setRoutePoint(this.findRoute(Direction.WEST, startNumber, findingNumber, row, col, false));
+					this.addRoutesToOutput(route1, route2);
 					
 					route1 = new Route();
 					route1.setDirection(Direction.NORTH);
-					shortList = this.findRoute(Direction.NORTH, startNumber, findingNumber, row, col, true);
-					route1.setRoutePoint(shortList);
-
+					route1.setRoutePoint(this.findRoute(Direction.NORTH, startNumber, findingNumber, row, col, true));
 					route2 = new Route();
 					route2.setDirection(Direction.NORTH);
-					longList = this.findRoute(Direction.NORTH, startNumber, findingNumber, row, col, false);
-					route2.setRoutePoint(longList);
-
-					if(this.checkShortestRoutesEqualLongestRoutes(shortList, longList)) {
-						this.output.add(route1);
-					}
-					else {
-						this.output.add(route1);
-						this.output.add(route2);
-					}
+					route2.setRoutePoint(this.findRoute(Direction.NORTH, startNumber, findingNumber, row, col, false));
+					this.addRoutesToOutput(route1, route2);
 				}
 			}
 		}
-		this.findShortestRoute();
-		this.findLongestRoute();
+		this.findShortestAndLongestRoute();
 		this.printOutput();
 	}
 	
-	private boolean checkShortestRoutesEqualLongestRoutes(ArrayList<DataPoint> shortList, ArrayList<DataPoint> longList) {
-		if( shortList != null && longList !=null && (shortList.size() != longList.size())) {
-			return false;
-		}
-		else if (shortList == null && longList != null){
-			return false;
-		}
-		else if (shortList != null && longList == null){
-			return false;
-		}
-		else if (shortList == null && longList == null){
-			return true;
-		}
-		else {
-			boolean isSame = true;
-			for(int i = 0; i < shortList.size(); i++) {
-				if(shortList.get(i).getNumber() != longList.get(i).getNumber()) {
-					isSame = false;
-					break;
-				}
+	private void addRoutesToOutput(Route route1, Route route2) {
+		if(route1.getRoutePoint() != null && route2.getRoutePoint() != null) {
+			if(route1.getRoutePoint().size() == route2.getRoutePoint().size()) {
+				this.output.add(route1);
 			}
-			return isSame;
+			else {
+				this.output.add(route1);
+				this.output.add(route2);
+			}
+		} 
+		else if (route1.getRoutePoint() != null && route2.getRoutePoint() == null) {
+			this.output.add(route1);
+		} 
+		else if (route1.getRoutePoint() == null && route2.getRoutePoint() != null) {
+			this.output.add(route2);
+		} else {
+			return;
 		}
 	}
 	
-	private ArrayList<DataPoint> findRoute(Direction direction, int startNumber, int findingNumber, int rowIdx, int colIdx, boolean isShort) {
+	private ArrayList<DataPoint> findRoute(Direction direction, int startNumber, int findingNumber, int rowIdx, int colIdx, boolean isShortestRoute) {
 		ArrayList<DataPoint> routes = new ArrayList<>();
 		if(direction.equals(Direction.EAST)) {
 			boolean isFound = false;
@@ -142,7 +95,7 @@ public class ProblemOnePointThree {
 				if(findingNumber == this.inputs[rowIdx][col].getNumber()) {
 					isFound = true;
 					idx=col;
-					if(isShort) {
+					if(isShortestRoute) {
 						break;
 					}
 				}
@@ -165,7 +118,7 @@ public class ProblemOnePointThree {
 				if(findingNumber == this.inputs[row][colIdx].getNumber()) {
 					isFound = true;
 					idx = row;
-					if(isShort) {
+					if(isShortestRoute) {
 						break;
 					}
 				}
@@ -188,7 +141,7 @@ public class ProblemOnePointThree {
 				if(findingNumber == this.inputs[rowIdx][col].getNumber()) {
 					isFound = true;
 					idx = col;
-					if(isShort) {
+					if(isShortestRoute) {
 						break;
 					}
 				}
@@ -204,14 +157,14 @@ public class ProblemOnePointThree {
 				routes = null;
 			}
 		}
-		else {
+		else { //NORTH
 			boolean isFound = false;
 			int idx = 0;
 			for(int row=rowIdx; row >= 0; row--) {
 				if(findingNumber == this.inputs[row][colIdx].getNumber()) {
 					isFound = true;
 					idx = row;
-					if(isShort) {
+					if(isShortestRoute) {
 						break;
 					}
 				}
@@ -230,29 +183,16 @@ public class ProblemOnePointThree {
 		return routes;
 	}
 	
-	private void findShortestRoute() {
+	private void findShortestAndLongestRoute() {
+		this.MIN_ROUTES = this.output.size() > 0 ? this.output.get(0).getRoutePoint().size(): 0;
 		for(Route route: this.output) {
-			if( route.getRoutePoint() != null && route.getRoutePoint().size() > 0) {
-				this.MIN_ROUTES = route.getRoutePoint().size();
-				break;
-			}
-		}
-		for(Route route: this.output) {
-			if( route.getRoutePoint() != null && route.getRoutePoint().size() > 0 && route.getRoutePoint().size() < this.MIN_ROUTES) {
+			if(route.getRoutePoint().size() > 0 && route.getRoutePoint().size() < this.MIN_ROUTES) {
 				this.MIN_ROUTES = route.getRoutePoint().size();
 			}
-		}
-	}
-	
-	private void findLongestRoute() {
+		}	
+		this.MAX_ROUTES = this.output.size() > 0 ? this.output.get(0).getRoutePoint().size(): 0;
 		for(Route route: this.output) {
-			if(route.getRoutePoint() != null && route.getRoutePoint().size() > 0) {
-				this.MAX_ROUTES = route.getRoutePoint().size();
-				break;
-			}
-		}
-		for(Route route: this.output) {
-			if(route.getRoutePoint() != null && route.getRoutePoint().size() > 0 && route.getRoutePoint().size() > this.MAX_ROUTES) {
+			if(route.getRoutePoint().size() > 0 && route.getRoutePoint().size() > this.MAX_ROUTES) {
 				this.MAX_ROUTES = route.getRoutePoint().size();
 			}
 		}

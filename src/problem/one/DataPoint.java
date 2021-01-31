@@ -1,4 +1,4 @@
-package test;
+package problem.one;
 
 public class DataPoint {
 	

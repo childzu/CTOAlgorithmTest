@@ -1,4 +1,4 @@
-package test;
+package problem.one;
 
 public class ProblemOnePointOne {
 	private final int MAX_ROW=6;
