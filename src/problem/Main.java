@@ -18,9 +18,5 @@ public class Main {
 		System.out.println("Problem 1.3");
 		ProblemOnePointThree probleOnePointThree = new ProblemOnePointThree();
 		probleOnePointThree.process(2, 8);
-		
-		System.out.println("Problem 2");
-		ProblemTwo problemTwo = new ProblemTwo();
-		problemTwo.process();
 	}
 }
