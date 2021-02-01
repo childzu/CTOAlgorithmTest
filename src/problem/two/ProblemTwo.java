@@ -49,7 +49,7 @@ public class ProblemTwo {
 	public void process() {
 		this.createListNode();
 		this.getMaxLevel();
-		this.pickupWalnuts(2);
+		this.pickupWalnuts(null, null);
 		this.printOutput();
 	}
 	
@@ -122,19 +122,71 @@ public class ProblemTwo {
 		return parentNode;
 	}
 	
-	private void pickupWalnuts(int startLevel) {
-		this.NO_OUTPUT = 1;
-		for(int level = startLevel; level <= this.MAX_LEVEL; level++) {
-			ArrayList<Node> nodes = this.getNodesFromLevel(level);
-			for(Node node: nodes) {
-				for(int i=1; i <= this.MAX_WALNUTS_IN_HOLE; i++) {
+	
+	private void pickupWalnuts(ArrayList<Node> nodes, Node currentNode) {
+		Node previousNode = currentNode;
+		ArrayList<Node> allNodes = nodes;
+		if(this.outputs.size() > this.MAX_WALNUTS-1) {
+			return;
+		}
+		if(currentNode == null) {
+			ArrayList<Node> childrens = this.getNodesFromLevel(1);
+			allNodes = this.getChildrenNodesFromParent(childrens.get(0).getNodeName());
+			for(int i = 0; i < allNodes.size(); i++) {
+				for(int j = 0; j < this.MAX_WALNUTS_IN_HOLE; j++) {
 					if(this.outputs.size() < this.MAX_WALNUTS) {
-						this.outputs.add(this.NO_OUTPUT + node.getLabelToRoot());
-						node.setNoOfWalnuts(node.getNoOfWalnuts() - 1);
 						this.NO_OUTPUT++;
+						this.outputs.add(this.NO_OUTPUT + allNodes.get(i).getLabelToRoot());
+						allNodes.get(i).setNoOfWalnuts(allNodes.get(i).getNoOfWalnuts() - 1);
 					}
 				}
 			}
+			this.pickupWalnuts(allNodes, allNodes.get(0));
+		}
+		else {
+			ArrayList<Node> childrens = this.getChildrenNodesFromParent(currentNode.getNodeName());
+			for(int i = 0; i < childrens.size(); i++) {
+				ArrayList<Node> hasChild = this.getChildrenNodesFromParent(childrens.get(i).getNodeName());
+				if(hasChild.size() == 0) {
+					for(int j = 0; j < this.MAX_WALNUTS_IN_HOLE; j++) {
+						if(this.outputs.size() < this.MAX_WALNUTS) {
+							this.NO_OUTPUT++;
+							this.outputs.add(this.NO_OUTPUT + childrens.get(i).getLabelToRoot());
+							childrens.get(i).setNoOfWalnuts(childrens.get(i).getNoOfWalnuts() - 1);
+						}
+					}
+				}
+				else {
+					if(i == 0) {
+						for(int j = 0; j < this.MAX_WALNUTS_IN_HOLE; j++) {
+							if(this.outputs.size() < this.MAX_WALNUTS) {
+								this.NO_OUTPUT++;
+								this.outputs.add(this.NO_OUTPUT + childrens.get(i).getLabelToRoot());
+								childrens.get(i).setNoOfWalnuts(childrens.get(i).getNoOfWalnuts() - 1);
+							}
+						}
+					}
+				}
+			}
+			ArrayList<Node> temp = new ArrayList<>();
+			for(int i = 0; i < allNodes.size(); i++) {
+				if(!previousNode.getNodeName().equals(allNodes.get(i).getNodeName())){
+					temp.add(allNodes.get(i));
+				}
+				else {
+					temp.add(previousNode);
+					for(int j = 0; j < childrens.size(); j++) {
+						temp.add(childrens.get(j));
+						if(j == 0) {
+							currentNode = childrens.get(j);
+						}
+					}
+					if(childrens.size() == 0) {
+						currentNode = allNodes.get(i+1);
+					}
+				}
+			}
+			this.pickupWalnuts(temp, currentNode);
 		}
 	}
 	
@@ -142,6 +194,16 @@ public class ProblemTwo {
 		ArrayList<Node> result = new ArrayList<>();
 		for(Node node : this.listNode) {
 			if(node.getLevel() == level) {
+				result.add(node);
+			}
+		}
+		return result;
+	}
+	
+	private ArrayList<Node> getChildrenNodesFromParent(String name){
+		ArrayList<Node> result = new ArrayList<>();
+		for(Node node : this.listNode) {
+			if(!node.isRoot() && node.getParent().getNodeName().equals(name)) {
 				result.add(node);
 			}
 		}
@@ -166,6 +228,5 @@ public class ProblemTwo {
 		System.out.println("Finished problem 2");
 		System.out.println("====================");
 	}
-
 
 }
